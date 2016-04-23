@@ -2,6 +2,14 @@ Flask==0.10.1
 Jinja2==2.8
 MarkupSafe==0.23
 Werkzeug==0.11.8
+decorator==4.0.9
+dict==0.0.5
+get==0.0.7
 gunicorn==19.4.5
 itsdangerous==0.24
+post==0.0.5
+public==0.0.0
+query-string==0.0.5
+request==0.0.5
+self==0.0.5
 wsgiref==0.1.2
