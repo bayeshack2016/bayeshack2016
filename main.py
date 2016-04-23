@@ -28,7 +28,7 @@ def validate():
             sys.stderr.write(str(messaging_events) + '\n')
             for event in messages:
                 # sender = event.sender.id
-                if (event['message'] and event['message']['text']):
+                if (event.get('message') and event['message']['text']):
                     text = event['message']['text']
                     # Handle a text message from this sender
                     sys.stderr.write(text + '\n')
