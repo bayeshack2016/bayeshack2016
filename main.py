@@ -24,13 +24,15 @@ def validate():
             app.logger.error(request.form)
             app.logger.error(request.values)
             messaging_events = json.loads(request.data.decode("utf-8"))
-            sys.stderr.write(str(messaging_events))
-            for i in xrange(len(messaging_events)):
-                event = messaging_events[i]
+            messages = messaging_events['entry']['messaging']
+            sys.stderr.write(str(messaging_events) + '\n')
+            for i in xrange(len(messages)):
+                event = messages[i]
                 # sender = event.sender.id
                 if (event['message'] and event['message']['text']):
                     text = event['message']['text']
                     # Handle a text message from this sender
+                    sys.stderr.write(text + '\n')
                     return text
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
