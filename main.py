@@ -24,6 +24,7 @@ def validate():
             app.logger.error(request.form)
             app.logger.error(request.values)
             messaging_events = json.loads(request.data.decode("utf-8"))
+            sys.stderr.write(str(messaging_events))
             for i in xrange(len(messaging_events)):
                 event = messaging_events[i]
                 # sender = event.sender.id
