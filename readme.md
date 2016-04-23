@@ -1,3 +1,3 @@
 Bayes Hack 2016
-Alex Mansourati, Samson Hu
+Alex Mansourati, Samson Hu, Victoria Gu
 
