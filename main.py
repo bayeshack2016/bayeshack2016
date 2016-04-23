@@ -24,10 +24,9 @@ def validate():
             app.logger.error(request.form)
             app.logger.error(request.values)
             messaging_events = json.loads(request.data.decode("utf-8"))
-            messages = messaging_events['entry']['messaging']
+            messages = messaging_events['entry'][0]['messaging']
             sys.stderr.write(str(messaging_events) + '\n')
-            for i in xrange(len(messages)):
-                event = messages[i]
+            for event in messages:
                 # sender = event.sender.id
                 if (event['message'] and event['message']['text']):
                     text = event['message']['text']
