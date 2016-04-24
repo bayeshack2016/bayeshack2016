@@ -42,6 +42,7 @@ def validate():
                     text = event['message']['text']
                     # Handle a text message from this sender
                     store_attribute(text)
+                    ask_questions()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         app.logger.error(traceback.print_exception(exc_type, exc_value, exc_traceback, limit=2))
@@ -65,6 +66,7 @@ def ask_questions():
                 SENDER_ID,
                 USER_PROFILE
             )
+            break
 
 
 def main():
