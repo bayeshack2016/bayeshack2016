@@ -5,12 +5,14 @@ from worker import conn
 import json
 import sys
 import traceback
+from Queue import Queue as FifoQueue
 from utils import ask_question
 from utils import wait_for_response
 from utils import sendTextMessage
 
 app = Flask(__name__)
 q = Queue(connection=conn)
+question_queue = FifoQueue()
 
 QUESTIONS = [
     ('city','What city do you live in?'),
@@ -44,34 +46,37 @@ def validate():
                     sendTextMessage(SENDER_ID, 'Thank you!')
                     # Handle a text message from this sender
                     store_attribute(text)
-                    ask_questions()
+                    ask_next_question()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         app.logger.error(traceback.print_exception(exc_type, exc_value, exc_traceback, limit=2))
         return 'Error, wrong validation token'
 
 def store_attribute(text):
-    global USER_PROFILE
-    for attribute, _ in QUESTIONS:
-        if USER_PROFILE.get(attribute) is None:
-            USER_PROFILE[attribute] = text
-            sys.stderr.write(str(USER_PROFILE)+ '\n')
-            break
+    USER_PROFILE[CURRENT_ATTRIBUTE] = text
+    sys.stderr.write(str(USER_PROFILE) + '\n')
 
-def ask_questions():
+def ask_next_question():
+    if question_queue.empty():
+        return
+    attribute, question = question_queue.get()
+    global CURRENT_ATTRIBUTE
+    CURRENT_ATTRIBUTE=attribute
+    q.enqueue(
+        ask_question,
+        attribute,
+        question,
+        SENDER_ID,
+        USER_PROFILE
+    )
+
+def fill_queue():
     for attribute, question in QUESTIONS:
-        if USER_PROFILE.get(attribute) is None:
-            q.enqueue(
-                ask_question,
-                attribute,
-                question,
-                SENDER_ID,
-                USER_PROFILE
-            )
-            break
+        question_queue.put((attribute,question))
 
 
 def main():
+    fill_queue()
     q.enqueue(wait_for_response)
     app.run(debug=True)
 

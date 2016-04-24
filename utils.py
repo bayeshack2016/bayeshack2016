@@ -6,7 +6,6 @@ import time
 def ask_question(attribute, question, sender_id, user_dict):
     if user_dict.get(attribute) is None:
         sendTextMessage(sender_id, question)
-    while user_dict.get(attribute) is None:
         wait_for_response()
     sys.stderr.write(str(user_dict)+ '\n')
 
