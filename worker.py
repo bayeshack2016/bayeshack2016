@@ -42,7 +42,7 @@ def store_response(sender_id, text):
     USER_PROFILE[CURRENT_ATTRIBUTE] = text
     sendTextMessage(sender_id, 'Thank you!')
 
-def wiat_for_response():
+def wait_for_response():
     returnval = add_listener()
     sys.stderr.write(str(returnval) + '\n')
     time.sleep(5)
