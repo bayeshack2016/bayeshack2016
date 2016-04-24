@@ -2,7 +2,6 @@ from flask import Flask
 from flask import request
 import json
 import requests
-import subprocess
 import sys
 import traceback
 app = Flask(__name__)
