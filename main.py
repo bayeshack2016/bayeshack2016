@@ -1,4 +1,3 @@
-from collections import namedtuple
 from flask import Flask
 from flask import request
 # from rq import Queue
@@ -10,22 +9,15 @@ import time
 import traceback
 
 app = Flask(__name__)
-UserProfile = namedtuple('User', 'city job years_exp education gender')
-QUESTIONS = [
-    'What city do you live in?',
-    'What do you do for a living?',
-    'How many years of experience do you have in that job?',
-    'Education? ("Less Than High School", "High School" , "Some College", "College", "Advanced")',
-    'What gender do you identify as?',
-]
-USER_PROFILE = UserProfile(
-    city=None,
-    job=None,
-    years_exp=None,
-    education=None,
-    gender=None
+QUESTIONS = dict(
+    city='What city do you live in?',
+    job='What do you do for a living?',
+    experience='How many years of experience do you have in that job?',
+    education='Education? ("Less Than High School", "High School" , "Some College", "College", "Advanced")',
+    gender='What gender do you identify as?',
 )
-INDEX_OF_CURRENT_QUESTION=0
+USER_PROFILE = {}
+CURRENT_ATTRIBUTE='city'
 SENDER_ID=1020675814687539
 
 @app.route("/")
@@ -68,20 +60,22 @@ def sendTextMessage(sender_id, text):
 
 def store_response(sender_id, text):
     global USER_PROFILE
-    USER_PROFILE[INDEX_OF_CURRENT_QUESTION] = text
+    USER_PROFILE[CURRENT_ATTRIBUTE] = text
     sendTextMessage(sender_id, 'Thank you!')
+
+def ask_questions():
+    global CURRENT_ATTRIBUTE
+    for attribute, question in QUESTIONS.iteritems():
+        while USER_PROFILE.get(attribute) is None:
+            CURRENT_ATTRIBUTE = attribute
+            sendTextMessage(SENDER_ID, question)
+            time.sleep(10)
+        sys.stderr.write(str(USER_PROFILE) + '\n')
 
 
 def main():
     app.run(debug=True)
-    global INDEX_OF_CURRENT_QUESTION
-    for i, question in enumerate(QUESTIONS):
-        # if user response to that question is not there
-        while USER_PROFILE[i] is None:
-            INDEX_OF_CURRENT_QUESTION=i
-            sendTextMessage(SENDER_ID, question)
-            time.sleep(10)
-        sys.stderr.write(str(USER_PROFILE) + '\n')
+    ask_questions()
 
 
 if __name__ == "__main__":
