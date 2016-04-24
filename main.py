@@ -53,7 +53,8 @@ def validate():
         return 'Error, wrong validation token'
 
 def store_attribute(text):
-    USER_PROFILE[CURRENT_ATTRIBUTE] = text
+    if CURRENT_ATTRIBUTE is not None:
+        USER_PROFILE[CURRENT_ATTRIBUTE] = text
     sys.stderr.write(str(USER_PROFILE) + '\n')
 
 def ask_next_question():
