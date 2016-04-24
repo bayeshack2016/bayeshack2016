@@ -52,18 +52,17 @@ def store_attribute(user_profile, text):
         if user_profile.get(attribute) is None:
             user_profile[attribute] = text
             sys.stderr.write(str(user_profile) + '\n')
+            break
 
 def ask_questions():
     for attribute, question in QUESTIONS.iteritems():
         if USER_PROFILE.get(attribute) is None:
             q.enqueue(
                 ask_question,
-                (
-                    attribute,
-                    question,
-                    SENDER_ID,
-                    USER_PROFILE
-                )
+                attribute,
+                question,
+                SENDER_ID,
+                USER_PROFILE
             )
 
 
