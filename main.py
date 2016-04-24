@@ -41,17 +41,18 @@ def validate():
                 if (event.get('message') and event['message']['text']):
                     text = event['message']['text']
                     # Handle a text message from this sender
-                    store_attribute(USER_PROFILE, text)
+                    store_attribute(text)
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         app.logger.error(traceback.print_exception(exc_type, exc_value, exc_traceback, limit=2))
         return 'Error, wrong validation token'
 
-def store_attribute(user_profile, text):
+def store_attribute(text):
+    global USER_PROFILE
     for attribute in QUESTIONS:
-        if user_profile.get(attribute) is None:
-            user_profile[attribute] = text
-            sys.stderr.write(str(user_profile) + '\n')
+        if USER_PROFILE.get(attribute) is None:
+            USER_PROFILE[attribute] = text
+            sys.stderr.write(str(USER_PROFILE)+ '\n')
             break
 
 def ask_questions():
@@ -67,7 +68,7 @@ def ask_questions():
 
 
 def main():
-    wait_for_response()
+    q.enqueue(wait_for_response)
     app.run(debug=True)
 
 

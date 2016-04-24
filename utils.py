@@ -12,7 +12,7 @@ def ask_question(attribute, question, sender_id, user_dict):
 def wait_for_response():
     returnval = add_listener()
     sys.stderr.write(str(returnval) + '\n')
-    time.sleep(10)
+    time.sleep(20)
 
 def add_listener():
     base_url = "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token="
