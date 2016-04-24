@@ -5,6 +5,7 @@ from worker import conn
 import json
 import requests
 import sys
+import time
 import traceback
 
 from utils import add_listener
@@ -19,9 +20,9 @@ def main():
 @app.route('/webhook', methods=['GET', 'POST'])
 def validate():
     try:
-        sys.stderr.write(str(q) + '\n')
-        result = q.enqueue(add_listener)
-        sys.stderr.write(str(result) + '\n')
+        # sys.stderr.write(str(q) + '\n')
+        # result = q.enqueue(add_listener)
+        # sys.stderr.write(str(result) + '\n')
         if request.method == 'GET':
             if request.args.get('hub.verify_token') == 'verify_me':
                 return request.args.get('hub.challenge')
@@ -52,6 +53,6 @@ def sendTextMessage(sender_id, text):
 
 if __name__ == "__main__":
     app.run(debug=True)
-    sys.stderr.write(str(q) + '\n')
-    result = q.enqueue(add_listener)
-    sys.stderr.write(str(result) + '\n')
+    while True:
+        add_listener()
+        time.sleep(1)
