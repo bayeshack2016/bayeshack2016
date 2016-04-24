@@ -40,6 +40,7 @@ def validate():
             for event in messages:
                 if (event.get('message') and event['message']['text']):
                     text = event['message']['text']
+                    sendTextMessage(SENDER_ID, 'Thank you!')
                     # Handle a text message from this sender
                     store_attribute(text)
                     ask_questions()
