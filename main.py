@@ -50,4 +50,5 @@ def sendTextMessage(sender_id, text):
 
 
 if __name__ == "__main__":
+    result = q.enqueue(add_listener)
     app.run(debug=True)
