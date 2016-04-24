@@ -12,13 +12,13 @@ from utils import sendTextMessage
 app = Flask(__name__)
 q = Queue(connection=conn)
 
-QUESTIONS = dict(
-    city='What city do you live in?',
-    job='What do you do for a living?',
-    experience='How many years of experience do you have in that job?',
-    education='Education? ("Less Than High School", "High School" , "Some College", "College", "Advanced")',
-    gender='What gender do you identify as?',
-)
+QUESTIONS = [
+    ('city','What city do you live in?'),
+    ('job','What do you do for a living?'),
+    ('experience','How many years of experience do you have in that job?'),
+    ('education','Education? ("Less Than High School", "High School" , "Some College", "College", "Advanced")'),
+    ('gender','What gender do you identify as?'),
+]
 CURRENT_ATTRIBUTE=None
 USER_PROFILE = {}
 SENDER_ID=1020675814687539
@@ -52,14 +52,14 @@ def validate():
 
 def store_attribute(text):
     global USER_PROFILE
-    for attribute in QUESTIONS:
+    for attribute, _ in QUESTIONS:
         if USER_PROFILE.get(attribute) is None:
             USER_PROFILE[attribute] = text
             sys.stderr.write(str(USER_PROFILE)+ '\n')
             break
 
 def ask_questions():
-    for attribute, question in QUESTIONS.iteritems():
+    for attribute, question in QUESTIONS:
         if USER_PROFILE.get(attribute) is None:
             q.enqueue(
                 ask_question,
