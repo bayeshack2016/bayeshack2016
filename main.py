@@ -19,6 +19,7 @@ def main():
 @app.route('/webhook', methods=['GET', 'POST'])
 def validate():
     try:
+        sys.stderr.write(str(q) + '\n')
         result = q.enqueue(add_listener)
         sys.stderr.write(str(result) + '\n')
         if request.method == 'GET':
@@ -51,4 +52,5 @@ def sendTextMessage(sender_id, text):
 
 if __name__ == "__main__":
     result = q.enqueue(add_listener)
+    sys.stderr.write(str(result) + '\n')
     app.run(debug=True)
