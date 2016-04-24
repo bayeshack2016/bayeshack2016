@@ -9,6 +9,7 @@ from Queue import Queue as FifoQueue
 from utils import ask_question
 from utils import wait_for_response
 from utils import sendTextMessage
+from model import data_clean
 
 app = Flask(__name__)
 q = Queue(connection=conn)
@@ -76,10 +77,20 @@ def fill_queue():
     for attribute, question in reversed(QUESTIONS):
         question_queue.put((attribute,question))
 
-
 def main():
     fill_queue()
     q.enqueue(wait_for_response)
+
+    city = USER_PROFILE['city'] or ''
+    job = USER_PROFILE['job'] or ''
+    city = USER_PROFILE['city'] or ''
+    experience = USER_PROFILE['experience'] or 5
+    education = USER_PROFILE['education'] or ''
+    gender = USER_PROFILE['gender'] or 1
+
+    income = data_clean.predict_income(city, job, experience, education, gender)
+
+
     app.run(debug=True)
 
 

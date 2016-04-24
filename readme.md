@@ -1,3 +1,2 @@
-Bayes Hack 2016
-Alex Mansourati, Samson Hu, Victoria Gu
-
+# bayeshack
+Bayes Impact Hackathon
