@@ -45,6 +45,7 @@ def validate():
                     sendTextMessage(SENDER_ID, text + ' received, Thank you!')
                     # Handle a text message from this sender
                     store_attribute(text)
+                    sys.stderr.write('store_attribute ' + text + '\n')
                     ask_next_question()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -62,6 +63,7 @@ def ask_next_question():
     attribute, question = question_queue.get()
     global CURRENT_ATTRIBUTE
     CURRENT_ATTRIBUTE=attribute
+    sys.stderr.write('enqueue ' + attribute + ' ' + question)
     q.enqueue(
         ask_question,
         attribute,
@@ -71,7 +73,7 @@ def ask_next_question():
     )
 
 def fill_queue():
-    for attribute, question in QUESTIONS:
+    for attribute, question in reversed(QUESTIONS):
         question_queue.put((attribute,question))
 
 
