@@ -4,15 +4,16 @@ import sys
 import time
 
 def ask_question(attribute, question, sender_id, user_dict):
-    while user_dict.get(attribute) is None:
+    if user_dict.get(attribute) is None:
         sendTextMessage(sender_id, question)
+    while user_dict.get(attribute) is None:
         wait_for_response()
     sys.stderr.write(str(user_dict)+ '\n')
 
 def wait_for_response():
     returnval = add_listener()
     sys.stderr.write(str(returnval) + '\n')
-    time.sleep(20)
+    time.sleep(1)
 
 def add_listener():
     base_url = "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token="
