@@ -32,7 +32,6 @@ def ind():
 @app.route('/webhook', methods=['GET', 'POST'])
 def validate():
     try:
-        ask_questions()
         if request.method == 'GET':
             if request.args.get('hub.verify_token') == 'verify_me':
                 return request.args.get('hub.challenge')
@@ -43,7 +42,7 @@ def validate():
             for event in messages:
                 if (event.get('message') and event['message']['text']):
                     text = event['message']['text']
-                    sendTextMessage(SENDER_ID, 'Thank you!')
+                    sendTextMessage(SENDER_ID, text + ' received, Thank you!')
                     # Handle a text message from this sender
                     store_attribute(text)
                     ask_next_question()
