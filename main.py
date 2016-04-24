@@ -1,3 +1,4 @@
+from collections import namedtuple
 from flask import Flask
 from flask import request
 # from rq import Queue
@@ -5,13 +6,30 @@ from flask import request
 import json
 import requests
 import sys
+import time
 import traceback
 
 app = Flask(__name__)
-# q = Queue(connection=conn)
+UserProfile = namedtuple('User', 'city job years_exp education gender')
+QUESTIONS = [
+    'What city do you live in?',
+    'What do you do for a living?',
+    'How many years of experience do you have in that job?',
+    'Education? ("Less Than High School", "High School" , "Some College", "College", "Advanced")',
+    'What gender do you identify as?',
+]
+USER_PROFILE = UserProfile(
+    city=None,
+    job=None,
+    years_exp=None,
+    education=None,
+    gender=None
+)
+INDEX_OF_CURRENT_QUESTION=0
+SENDER_ID=1020675814687539
 
 @app.route("/")
-def main():
+def ind():
     return "Hello World!"
 
 @app.route('/webhook', methods=['GET', 'POST'])
@@ -32,7 +50,8 @@ def validate():
                     sender_id = event['sender']['id']
                     text = event['message']['text']
                     # Handle a text message from this sender
-                    sendTextMessage(sender_id, text)
+                    # sendTextMessage(sender_id, text)
+                    store_response(sender_id, text)
                     return text
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -47,6 +66,23 @@ def sendTextMessage(sender_id, text):
     r = requests.post(url, data=json.dumps(payload), headers=headers)
     sys.stderr.write(str(r.status_code) + '\n')
 
+def store_response(sender_id, text):
+    global USER_PROFILE
+    USER_PROFILE[INDEX_OF_CURRENT_QUESTION] = text
+    sendTextMessage(sender_id, 'Thank you!')
+
+
+def main():
+    app.run(debug=True)
+    global INDEX_OF_CURRENT_QUESTION
+    for i, question in enumerate(QUESTIONS):
+        # if user response to that question is not there
+        while USER_PROFILE[i] is None:
+            INDEX_OF_CURRENT_QUESTION=i
+            sendTextMessage(SENDER_ID, question)
+            time.sleep(10)
+        sys.stderr.write(str(USER_PROFILE) + '\n')
+
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    main()
