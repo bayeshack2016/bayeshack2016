@@ -7,6 +7,7 @@ import sys
 import traceback
 from utils import ask_question
 from utils import wait_for_response
+from utils import sendTextMessage
 
 app = Flask(__name__)
 q = Queue(connection=conn)
