@@ -19,7 +19,7 @@ def main():
 @app.route('/webhook', methods=['GET', 'POST'])
 def validate():
     try:
-        result = q.enqueue(add_listener, 'http://heroku.com')
+        result = q.enqueue(add_listener)
         sys.stderr.write(str(result) + '\n')
         if request.method == 'GET':
             if request.args.get('hub.verify_token') == 'verify_me':
