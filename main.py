@@ -1,10 +1,16 @@
 from flask import Flask
 from flask import request
+from rq import Queue
+from worker import conn
 import json
 import requests
 import sys
 import traceback
+
+from utils import add_listener
+
 app = Flask(__name__)
+q = Queue(connection=conn)
 
 @app.route("/")
 def main():
@@ -13,6 +19,8 @@ def main():
 @app.route('/webhook', methods=['GET', 'POST'])
 def validate():
     try:
+        result = q.enqueue(add_listener, 'http://heroku.com')
+        sys.stderr.write(str(result) + '\n')
         if request.method == 'GET':
             if request.args.get('hub.verify_token') == 'verify_me':
                 return request.args.get('hub.challenge')
