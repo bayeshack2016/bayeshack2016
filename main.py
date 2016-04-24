@@ -53,6 +53,8 @@ def sendTextMessage(sender_id, text):
 
 if __name__ == "__main__":
     app.run(debug=True)
+    sys.stderr.write('before true\n')
     while True:
-        add_listener()
+        returnval = add_listener()
+        sys.stderr.write(str(returnval) + '\n')
         time.sleep(1)
